@@ -46,7 +46,7 @@ class Server:
 
         dataset_len = len(self.dataset())
         assert index is None or 0 <= index < dataset_len, "Index out of range"
-        
+
         if index is None:
             index = 0
         next_index = min(index + page_size, dataset_len)
