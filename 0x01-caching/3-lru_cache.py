@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-"""2-lifo_cache.py module"""
+"""3-lru_cache.py module"""
 
 BaseCaching = __import__('base_caching').BaseCaching
 
 
-class LIFOCache(BaseCaching):
+class LRUCache(BaseCaching):
     """
-    A caching class that follows the LIFO rule,
+    A caching class that follows the LRU rule,
     it inherits from BaseCaching.
     """
 
@@ -14,21 +14,22 @@ class LIFOCache(BaseCaching):
         """Initializatioin method"""
 
         super().__init__()
-        self.last_added = ''
+        self.order = []
 
     def put(self, key, item):
         """Assign to the dictionary self.cache_data"""
 
         if key and item:
             if key in self.cache_data:
-                self.cache_data[key] = item
+                self.order.remove(key)
             else:
                 if len(self.cache_data) >= self.MAX_ITEMS:
-                    print(f"DISCARD: {self.last_added}")
-                    del self.cache_data[self.last_added]
+                    lru_key = self.order.pop(0)
+                    del self.cache_data[lru_key]
+                    print(f"DISCARD: {lru_key}")
 
-            self.last_added = key
             self.cache_data[key] = item
+            self.order.append(key)
 
     def get(self, key):
         """
@@ -36,8 +37,9 @@ class LIFOCache(BaseCaching):
         or None if key does not exits.
         """
 
-        value = self.cache_data.get(key)
-
-        if key or value is not None:
-            return value
-        return None
+        if key in self.cache_data:
+            self.order.remove(key)
+            self.order.append(key)
+            return self.cache_data[key]
+        else:
+            return None
