@@ -24,13 +24,14 @@ class FIFOCache(BaseCaching):
         if key and item:
             if key in self.cache_data:
                 self.cache_data[key] = item
-            elif len(self.cache_data) >= self.MAX_ITEMS:
-                discarded_key, _ = self.queue.popitem(last=False)
-                del self.cache_data[discarded_key]
-                print(f"DISCARD: {discarded_key}")
+            else:
+                if len(self.cache_data) >= self.MAX_ITEMS:
+                    discarded_key, _ = self.queue.popitem(last=False)
+                    del self.cache_data[discarded_key]
+                    print(f"DISCARD: {discarded_key}")
 
-        self.cache_data[key] = item
-        self.queue[key] = True
+            self.cache_data[key] = item
+            self.queue[key] = True
 
     def get(self, key):
         """
