@@ -27,7 +27,9 @@ class LFUCache(BaseCaching):
             self.frequency[key] += 1
         elif len(self.cache_data) >= self.MAX_ITEMS:
             min_frequency = min(self.frequency.values())
-            lfu_keys = [k for k, v in self.frequency.items() if v == min_frequency]
+            lfu_keys = [
+                k for k, v in self.frequency.items() if v == min_frequency
+            ]
 
             if len(lfu_keys) > 1:
                 lru_key = min(self.cache_data, key=self.frequency.get)
@@ -48,7 +50,7 @@ class LFUCache(BaseCaching):
         Return the value of key in self.cache_data,
         or None if key does not exits.
         """
-    
+
         if key in self.cache_data:
             self.frequency[key] += 1
             return self.cache_data[key]
